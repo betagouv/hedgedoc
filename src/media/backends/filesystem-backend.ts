@@ -38,7 +38,7 @@ export class FilesystemBackend implements MediaBackend {
   }
 
   async deleteFile(fileName: string, _: BackendData): Promise<void> {
-    return fs.unlink(this.getFilePath(fileName));
+    return await fs.unlink(this.getFilePath(fileName));
   }
 
   getFileURL(fileName: string, _: BackendData): Promise<string> {

@@ -74,7 +74,7 @@ export class NotesService {
       newNote.historyEntries = [HistoryEntry.create(owner)];
       newNote.owner = owner;
     }
-    return this.noteRepository.save(newNote);
+    return await this.noteRepository.save(newNote);
   }
 
   async getCurrentContent(note: Note): Promise<string> {
@@ -82,11 +82,11 @@ export class NotesService {
   }
 
   async getLatestRevision(note: Note): Promise<Revision> {
-    return this.revisionsService.getLatestRevision(note.id);
+    return await this.revisionsService.getLatestRevision(note.id);
   }
 
   async getFirstRevision(note: Note): Promise<Revision> {
-    return this.revisionsService.getFirstRevision(note.id);
+    return await this.revisionsService.getFirstRevision(note.id);
   }
 
   async getNoteByIdOrAlias(noteIdOrAlias: string): Promise<Note> {
@@ -137,7 +137,7 @@ export class NotesService {
     //TODO: Calculate patch
     revisions.push(Revision.create(noteContent, noteContent));
     note.revisions = Promise.resolve(revisions);
-    return this.noteRepository.save(note);
+    return await this.noteRepository.save(note);
   }
 
   updateNotePermissions(
@@ -175,7 +175,7 @@ export class NotesService {
 
   async getNoteContent(noteIdOrAlias: string): Promise<string> {
     const note = await this.getNoteByIdOrAlias(noteIdOrAlias);
-    return this.getCurrentContent(note);
+    return await this.getCurrentContent(note);
   }
 
   toTagList(note: Note): string[] {

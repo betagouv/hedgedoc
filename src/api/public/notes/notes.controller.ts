@@ -62,7 +62,7 @@ export class NotesController {
       throw new UnauthorizedException('Creating note denied!');
     }
     this.logger.debug('Got raw markdown:\n' + text);
-    return this.noteService.toNoteDto(
+    return await this.noteService.toNoteDto(
       await this.noteService.createNote(text, undefined, req.user),
     );
   }
@@ -86,7 +86,7 @@ export class NotesController {
       throw new UnauthorizedException('Reading note denied!');
     }
     await this.historyService.createOrUpdateHistoryEntry(note, req.user);
-    return this.noteService.toNoteDto(note);
+    return await this.noteService.toNoteDto(note);
   }
 
   @UseGuards(TokenAuthGuard)
@@ -100,7 +100,7 @@ export class NotesController {
       throw new UnauthorizedException('Creating note denied!');
     }
     this.logger.debug('Got raw markdown:\n' + text, 'createNamedNote');
-    return this.noteService.toNoteDto(
+    return await this.noteService.toNoteDto(
       await this.noteService.createNote(text, noteAlias, req.user),
     );
   }
@@ -141,7 +141,7 @@ export class NotesController {
         throw new UnauthorizedException('Updating note denied!');
       }
       this.logger.debug('Got raw markdown:\n' + text, 'updateNote');
-      return this.noteService.toNoteDto(
+      return await this.noteService.toNoteDto(
         await this.noteService.updateNoteByIdOrAlias(noteIdOrAlias, text),
       );
     } catch (e) {
@@ -184,7 +184,7 @@ export class NotesController {
       if (!this.permissionsService.mayRead(req.user, note)) {
         throw new UnauthorizedException('Reading note denied!');
       }
-      return this.noteService.toNoteMetadataDto(
+      return await this.noteService.toNoteMetadataDto(
         await this.noteService.getNoteByIdOrAlias(noteIdOrAlias),
       );
     } catch (e) {
@@ -207,7 +207,7 @@ export class NotesController {
       if (!this.permissionsService.isOwner(req.user, note)) {
         throw new UnauthorizedException('Updating note denied!');
       }
-      return this.noteService.toNotePermissionsDto(
+      return await this.noteService.toNotePermissionsDto(
         await this.noteService.updateNotePermissions(noteIdOrAlias, updateDto),
       );
     } catch (e) {
@@ -232,7 +232,7 @@ export class NotesController {
       const revisions = await this.revisionsService.getAllRevisions(
         noteIdOrAlias,
       );
-      return Promise.all(
+      return await Promise.all(
         revisions.map((revision) =>
           this.revisionsService.toRevisionMetadataDto(revision),
         ),
